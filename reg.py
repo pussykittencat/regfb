@@ -1,16 +1,38 @@
-from random import seed
-from random import randint
-from selenium import webdriver
-from selenium.webdriver.support.select import Select
-import random, subprocess, time, pyotp, os, io, selenium
-
+try:
+    import selenium, pyotp
+except ModuleNotFoundError:
+    os.system('pip install selenium pyotp')
+finally:
+    from random import seed
+    from random import randint
+    from selenium import webdriver
+    from selenium.webdriver.support.select import Select
+    import random, subprocess, time, pyotp, os, io, selenium
+    import platform
 
 #mở chrome
-driver = webdriver.Chrome(r'C:\Users\ADMIN\OneDrive\Máy tính\reg\chromedriver.exe')
+   # Windows
+if platform.system() == "Windows":
+    driver = webdriver.Chrome(r'chromedriver.exe')
+
+    # Linux
+elif platform.system() == "Linux":
+    try:
+        driver = webdriver.Chrome(r'chromedriver')
+    except:
+        os.system("sudo cp -f ./chromedriver /usr/local/bin/chromedriver -f")
+        driver = webdriver.Chrome(r'chromedriver')
+
+    # macOs - Unix
+else:
+    try:
+        driver = webdriver.Chrome(r'chromedriver_unix')
+    except:
+        os.system("sudo cp ./chromedriver_unix $(dirname $(which $SHELL)) -f")
+        driver = webdriver.Chrome(r'chromedriver_unix')
 
 #đếm số dòng file mail
-
-with open(r"C:\Users\ADMIN\OneDrive\Máy tính\reg\mail.txt", "r", encoding="utf-8") as f:
+with open(r"mail.txt", "r", encoding="utf-8") as f:
     lines = [line.rstrip() for line in f]
     for ditme in range((len(lines))):
         # mở fb
@@ -19,7 +41,7 @@ with open(r"C:\Users\ADMIN\OneDrive\Máy tính\reg\mail.txt", "r", encoding="utf
 
         # điền họ
         ho = driver.find_element_by_xpath(r'//*[@id="firstname"]/div/input')
-        fa = open(r'C:\Users\ADMIN\OneDrive\Máy tính\reg\ho.txt', 'r', encoding="utf-8")
+        fa = open(r'ho.txt', 'r', encoding="utf-8")
         for i in fa.readlines():
             x = i.split("|")
             hoten = x[randint(0,len(x))]
@@ -28,7 +50,7 @@ with open(r"C:\Users\ADMIN\OneDrive\Máy tính\reg\mail.txt", "r", encoding="utf
 
         #điền tên
         ten = driver.find_element_by_xpath(r'//*[@id="firstname"]/div/div[1]/input')
-        fb = open(r'C:\Users\ADMIN\OneDrive\Máy tính\reg\ten.txt', 'r', encoding="utf-8")
+        fb = open(r'ten.txt', 'r', encoding="utf-8")
         for o in fb.readlines():
             y = o.split("|")
             tenho = y[randint(0,len(y))]
@@ -66,7 +88,7 @@ with open(r"C:\Users\ADMIN\OneDrive\Máy tính\reg\mail.txt", "r", encoding="utf
 
         #điền pwd
         pwd = driver.find_element_by_id('password_step_input')
-        fd = open(r"C:\Users\ADMIN\OneDrive\Máy tính\reg\pwd.txt", "r", encoding="utf-8")
+        fd = open(r"pwd.txt", "r", encoding="utf-8")
         pwd.send_keys(fd.readlines())
         fd.close()
 
